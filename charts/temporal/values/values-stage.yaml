@@ -107,7 +107,7 @@ server:
     
     # Namespace Configuration
     namespaces:
-      create: false
+      create: true
       namespace:
         - name: default
           retention: 14d
