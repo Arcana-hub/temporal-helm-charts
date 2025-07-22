@@ -63,7 +63,9 @@ server:
     - name: opensearch-tls-certs
       mountPath: /etc/ssl/certs
       readOnly: true
-  additionalEnv: []
+  additionalEnv:
+    - name: CURL_CA_BUNDLE
+      value: "/etc/ssl/certs/ca.crt"
   additionalInitContainers: []
   
   securityContext:
@@ -105,7 +107,7 @@ server:
     
     # Namespace Configuration
     namespaces:
-      create: true
+      create: false
       namespace:
         - name: default
           retention: 14d
@@ -295,7 +297,9 @@ admintools:
     - name: opensearch-tls-certs
       mountPath: /etc/ssl/certs
       readOnly: true
-  additionalEnv: []
+  additionalEnv:
+    - name: CURL_CA_BUNDLE
+      value: "/etc/ssl/certs/ca.crt"
   additionalEnvSecretName: ""
   additionalInitContainers: []
   resources: {}
