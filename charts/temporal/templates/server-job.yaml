@@ -97,9 +97,9 @@ spec:
             {{- else if eq $driver "elasticsearch" }}
           command: ['sh', '-c']
           args:
-            - 'curl -X PUT --fail --user "$ES_USER:$ES_PWD"{{- if and $.Values.elasticsearch.tls $.Values.elasticsearch.tls.enabled }} --cacert {{ $.Values.elasticsearch.tls.caFile }}{{- if $.Values.elasticsearch.tls.certFile }} --cert {{ $.Values.elasticsearch.tls.certFile }}{{- end }}{{- if $.Values.elasticsearch.tls.keyFile }} --key {{ $.Values.elasticsearch.tls.keyFile }}{{- end }}{{- end }} $ES_SCHEME://$ES_HOST:$ES_PORT/_template/temporal_visibility_v1_template -H "Content-Type: application/json" --data-binary "@schema/elasticsearch/visibility/index_template_$ES_VERSION.json" 2>&1 &&
-              curl --head --fail --user "$ES_USER:$ES_PWD"{{- if and $.Values.elasticsearch.tls $.Values.elasticsearch.tls.enabled }} --cacert {{ $.Values.elasticsearch.tls.caFile }}{{- if $.Values.elasticsearch.tls.certFile }} --cert {{ $.Values.elasticsearch.tls.certFile }}{{- end }}{{- if $.Values.elasticsearch.tls.keyFile }} --key {{ $.Values.elasticsearch.tls.keyFile }}{{- end }}{{- end }} $ES_SCHEME://$ES_HOST:$ES_PORT/$ES_VISIBILITY_INDEX 2>&1 ||
-              curl -X PUT --fail --user "$ES_USER:$ES_PWD"{{- if and $.Values.elasticsearch.tls $.Values.elasticsearch.tls.enabled }} --cacert {{ $.Values.elasticsearch.tls.caFile }}{{- if $.Values.elasticsearch.tls.certFile }} --cert {{ $.Values.elasticsearch.tls.certFile }}{{- end }}{{- if $.Values.elasticsearch.tls.keyFile }} --key {{ $.Values.elasticsearch.tls.keyFile }}{{- end }}{{- end }} $ES_SCHEME://$ES_HOST:$ES_PORT/$ES_VISIBILITY_INDEX 2>&1'
+            - 'curl -X PUT --fail --user "$ES_USER:$ES_PWD" $ES_SCHEME://$ES_HOST:$ES_PORT/_template/temporal_visibility_v1_template -H "Content-Type: application/json" --data-binary "@schema/elasticsearch/visibility/index_template_$ES_VERSION.json" 2>&1 &&
+              curl --head --fail --user "$ES_USER:$ES_PWD" $ES_SCHEME://$ES_HOST:$ES_PORT/$ES_VISIBILITY_INDEX 2>&1 ||
+              curl -X PUT --fail --user "$ES_USER:$ES_PWD" $ES_SCHEME://$ES_HOST:$ES_PORT/$ES_VISIBILITY_INDEX 2>&1'
             {{- end }}
           env:
             {{- include "temporal.admintools-env" (list $ $store) | nindent 12 }}
