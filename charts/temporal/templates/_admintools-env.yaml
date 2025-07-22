@@ -93,5 +93,9 @@
   value: {{ $driverConfig.version }}
 - name: ES_VISIBILITY_INDEX
   value: {{ $driverConfig.visibilityIndex }}
+{{- if and $driverConfig.tls $driverConfig.tls.enabled $driverConfig.tls.caFile }}
+- name: CURL_CA_BUNDLE
+  value: {{ $driverConfig.tls.caFile }}
+{{- end }}
 {{- end }}
 {{- end -}}
