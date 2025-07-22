@@ -93,7 +93,7 @@ server:
           user: "temporal-cassandra-superuser"
           password: "1fKyHzC70YH3BbW83f2y"
           existingSecret: ""
-          replicationFactor: 2
+          replicationFactor: 3
           replication:
             class: "NetworkTopologyStrategy"
             dc1: 3

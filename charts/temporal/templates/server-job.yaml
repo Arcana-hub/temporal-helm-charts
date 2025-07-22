@@ -62,7 +62,13 @@ spec:
           image: "{{ $.Values.admintools.image.repository }}:{{ $.Values.admintools.image.tag }}"
           imagePullPolicy: {{ $.Values.admintools.image.pullPolicy }}
               {{- if eq $driver "cassandra" }}
+                {{- if and $storeConfig.cassandra.replication $storeConfig.cassandra.replication.class (eq $storeConfig.cassandra.replication.class "NetworkTopologyStrategy") }}
+                  {{- range $dc, $rf := (omit $storeConfig.cassandra.replication "class") }}
+          command: ['temporal-cassandra-tool', 'create', '-k', '{{ $storeConfig.cassandra.keyspace }}', '--datacenter', '{{ $dc }}', '--replication-factor', '{{ $rf }}']
+                  {{- end }}
+                {{- else }}
           command: ['temporal-cassandra-tool', 'create', '-k', '{{ $storeConfig.cassandra.keyspace }}', '--replication-factor', '{{ $storeConfig.cassandra.replicationFactor }}']
+                {{- end }}
               {{- else if eq $driver "sql" }}
           command: ['temporal-sql-tool', 'create-database']
               {{- end }}
