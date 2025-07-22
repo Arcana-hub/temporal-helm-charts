@@ -387,6 +387,11 @@ elasticsearch:
   username: "admin"
   password: "admin"
   visibilityIndex: "temporal_visibility_v1_dev"
+  # Index settings for OpenSearch
+  indices:
+    settings:
+      number_of_shards: 16
+      number_of_replicas: 2
   # TLS configuration for HTTPS connection with CA certificate verification
   tls:
     enabled: true
