@@ -19,7 +19,7 @@ server:
     tag: 1.28.0
     pullPolicy: IfNotPresent
   
-  replicaCount: 1
+  replicaCount: 3
   
   # Metrics Configuration
   metrics:
