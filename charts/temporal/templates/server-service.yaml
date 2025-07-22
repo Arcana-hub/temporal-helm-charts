@@ -12,6 +12,9 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $serviceValues.service.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
+  {{- with $serviceValues.service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
   type: {{ $serviceValues.service.type }}
   ports:
     - port: {{ $serviceValues.service.port }}

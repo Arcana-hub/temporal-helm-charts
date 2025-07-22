@@ -114,12 +114,17 @@ server:
   
   # Frontend Service Configuration
   frontend:
+    enabled: true
+    replicaCount: 2
     service:
-      annotations: {}
-      type: ClusterIP
+      annotations:
+        cloud.google.com/load-balancer-type: "Internal"
+        networking.gke.io/internal-load-balancer-allow-global-access: "true"
+      type: LoadBalancer
       port: 7233
       membershipPort: 6933
       httpPort: 7243
+      loadBalancerIP: 10.230.0.87
     ingress:
       enabled: false
       annotations: {}
@@ -310,15 +315,18 @@ admintools:
 # Web UI Configuration
 web:
   enabled: true
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: temporalio/ui
     tag: 2.38.3
     pullPolicy: IfNotPresent
   service:
-    type: ClusterIP
+    type: LoadBalancer
     port: 8080
-    annotations: {}
+    annotations:
+      cloud.google.com/load-balancer-type: "Internal"
+      networking.gke.io/internal-load-balancer-allow-global-access: "true"
+    loadBalancerIP: 10.230.0.88
   ingress:
     enabled: false
     annotations: {}
@@ -340,7 +348,11 @@ web:
   affinity: {}
   additionalVolumes: []
   additionalVolumeMounts: []
-  additionalEnv: []
+  additionalEnv:
+    - name: TEMPORAL_CSRF_COOKIE_INSECURE
+      value: "true"
+    - name: TEMPORAL_CORS_ORIGINS
+      value: "http://temporal-web.stage-internal.arcana.io"
   additionalEnvSecretName: ""
   containerSecurityContext: {}
   securityContext: {}
