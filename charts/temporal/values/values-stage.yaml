@@ -43,7 +43,10 @@ server:
   podLabels: {}
   secretLabels: {}
   secretAnnotations: {}
-  resources: {}
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
   
   # Node Selection and Tolerations
   nodeSelector:
@@ -140,7 +143,10 @@ server:
     deploymentAnnotations: {}
     podAnnotations: {}
     podLabels: {}
-    resources: {}
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
     nodeSelector:
       workload: temporal-services
     tolerations:
@@ -172,7 +178,10 @@ server:
     deploymentAnnotations: {}
     podAnnotations: {}
     podLabels: {}
-    resources: {}
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "200m"
     nodeSelector:
       workload: temporal-services
     tolerations:
@@ -200,7 +209,10 @@ server:
     deploymentAnnotations: {}
     podAnnotations: {}
     podLabels: {}
-    resources: {}
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1000m"
     nodeSelector:
       workload: temporal-services
     tolerations:
@@ -229,7 +241,10 @@ server:
     deploymentAnnotations: {}
     podAnnotations: {}
     podLabels: {}
-    resources: {}
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
     nodeSelector:
       workload: temporal-services
     tolerations:
@@ -257,7 +272,10 @@ server:
     deploymentAnnotations: {}
     podAnnotations: {}
     podLabels: {}
-    resources: {}
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
     nodeSelector:
       workload: temporal-services
     tolerations:
@@ -307,7 +325,10 @@ admintools:
       value: "/etc/ssl/certs/ca.crt"
   additionalEnvSecretName: ""
   additionalInitContainers: []
-  resources: {}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
   containerSecurityContext: {}
   securityContext: {}
   podDisruptionBudget: {}
@@ -337,7 +358,10 @@ web:
   deploymentAnnotations: {}
   podAnnotations: {}
   podLabels: {}
-  resources: {}
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
   nodeSelector:
     workload: temporal-services
   tolerations:
@@ -371,7 +395,10 @@ schema:
     backoffLimit: 100
   podAnnotations: {}
   podLabels: {}
-  resources: {}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
   containerSecurityContext: {}
   securityContext: {}
 
