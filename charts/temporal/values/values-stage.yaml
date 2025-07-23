@@ -118,7 +118,7 @@ server:
   # Frontend Service Configuration
   frontend:
     enabled: true
-    replicaCount: 2
+    replicaCount: 3
     service:
       annotations:
         cloud.google.com/load-balancer-type: "Internal"
@@ -232,11 +232,6 @@ server:
     service:
       port: 7235
       membershipPort: 6935
-    metrics:
-      annotations:
-        enabled: false
-      serviceMonitor: {}
-      prometheus: {}
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
