@@ -436,7 +436,7 @@ postgresql:
 prometheus:
   enabled: true
   nodeExporter:
-    enabled: true
+    enabled: false
     nodeSelector:
       workload: temporal-services
       kubernetes.io/os: linux
