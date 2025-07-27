@@ -450,7 +450,15 @@ prometheus:
         operator: Equal
         value: temporal-services
         effect: NoExecute
-  nodeExporter:
+  prometheus-pushgateway:
+    nodeSelector:
+      workload: temporal-services
+    tolerations:
+      - key: workload
+        operator: Equal
+        value: temporal-services
+        effect: NoExecute
+  prometheus-node-exporter:
     enabled: true
     nodeSelector:
       workload: temporal-services
