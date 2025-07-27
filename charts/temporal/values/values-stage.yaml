@@ -437,6 +437,14 @@ prometheus:
   enabled: true
   nodeExporter:
     enabled: true
+    nodeSelector:
+      workload: temporal-services
+      kubernetes.io/os: linux
+    tolerations:
+      - key: workload
+        operator: Equal
+        value: temporal-services
+        effect: NoExecute
 
 grafana:
   enabled: true
