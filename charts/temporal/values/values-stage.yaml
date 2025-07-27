@@ -442,6 +442,14 @@ prometheus:
       operator: Equal
       value: temporal-services
       effect: NoExecute
+  server:
+    nodeSelector:
+      workload: temporal-services
+    tolerations:
+      - key: workload
+        operator: Equal
+        value: temporal-services
+        effect: NoExecute
   nodeExporter:
     enabled: true
     nodeSelector:
