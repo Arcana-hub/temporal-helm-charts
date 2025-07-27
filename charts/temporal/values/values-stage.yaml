@@ -434,17 +434,9 @@ postgresql:
 
 # Disable Monitoring (can be enabled if needed)
 prometheus:
-  enabled: true
+  enabled: false
   nodeExporter:
     enabled: false
-    nodeSelector:
-      workload: temporal-services
-      kubernetes.io/os: linux
-    tolerations:
-      - key: workload
-        operator: Equal
-        value: temporal-services
-        effect: NoExecute
 
 grafana:
   enabled: true
