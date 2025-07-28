@@ -224,8 +224,6 @@ server:
     service:
       port: 7235
       membershipPort: 6935
-    metrics:
-      enabled: false
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
@@ -454,9 +452,9 @@ prometheus:
       requests:
         memory: "4Gi"
         cpu: "500m"
-      limits:
-        memory: "4Gi"
-        cpu: "2000m"
+      # limits:
+        # memory: "4Gi"
+        # cpu: "2000m"
     
     # Node placement
     nodeSelector:
