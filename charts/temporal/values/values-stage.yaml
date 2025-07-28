@@ -224,7 +224,8 @@ server:
     service:
       port: 7235
       membershipPort: 6935
-    # Metrics inherited from globalMetrics
+    metrics:
+      enabled: false
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
