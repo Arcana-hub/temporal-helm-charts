@@ -11,6 +11,19 @@ serviceAccount:
 additionalAnnotations: {}
 additionalLabels: {}
 
+# Global Monitoring Configuration
+globalMetrics:
+  enabled: true
+  annotations:
+    enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 15s
+    additionalLabels: {}
+    metricRelabelings: []
+  prometheus:
+    timerType: histogram
+
 # Temporal Server Configuration
 server:
   enabled: true
@@ -21,20 +34,11 @@ server:
   
   replicaCount: 3
   
-  # Metrics Configuration
+  # Metrics Configuration (inherits from globalMetrics)
   metrics:
-    annotations:
-      enabled: true
     tags: {}
     excludeTags: {}
     prefix: ""
-    serviceMonitor:
-      enabled: false
-      interval: 30s
-      additionalLabels: {}
-      metricRelabelings: []
-    prometheus:
-      timerType: histogram
   
   # Pod Configuration
   deploymentLabels: {}
@@ -134,11 +138,7 @@ server:
       hosts:
         - "/"
       tls: []
-    metrics:
-      annotations:
-        enabled: true
-      serviceMonitor: {}
-      prometheus: {}
+    # Metrics inherited from globalMetrics
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
@@ -169,11 +169,7 @@ server:
       port: 7236
       membershipPort: 6936
       httpPort: 7246
-    metrics:
-      annotations:
-        enabled: true
-      serviceMonitor: {}
-      prometheus: {}
+    # Metrics inherited from globalMetrics
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
@@ -200,11 +196,7 @@ server:
     service:
       port: 7234
       membershipPort: 6934
-    metrics:
-      annotations:
-        enabled: true
-      serviceMonitor: {}
-      prometheus: {}
+    # Metrics inherited from globalMetrics
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
@@ -232,6 +224,7 @@ server:
     service:
       port: 7235
       membershipPort: 6935
+    # Metrics inherited from globalMetrics
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
@@ -258,11 +251,7 @@ server:
     service:
       port: 7239
       membershipPort: 6939
-    metrics:
-      annotations:
-        enabled: true
-      serviceMonitor: {}
-      prometheus: {}
+    # Metrics inherited from globalMetrics
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
@@ -295,6 +284,7 @@ admintools:
     type: ClusterIP
     port: 22
     annotations: {}
+  # Metrics inherited from globalMetrics
   deploymentLabels: {}
   deploymentAnnotations: {}
   podLabels: {}
@@ -343,6 +333,7 @@ web:
       cloud.google.com/load-balancer-type: "Internal"
       networking.gke.io/internal-load-balancer-allow-global-access: "true"
     loadBalancerIP: 10.230.0.88
+  # Metrics inherited from globalMetrics
   ingress:
     enabled: false
     annotations: {}
@@ -469,4 +460,4 @@ prometheus:
         effect: NoExecute
 
 grafana:
-  enabled: true
+  enabled: false
