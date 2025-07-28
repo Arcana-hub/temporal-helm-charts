@@ -495,21 +495,12 @@ prometheus:
   # Prometheus Node Exporter Configuration
   prometheus-node-exporter:
     enabled: true
-    # Run on all temporal-related node pools (Cassandra, OpenSearch, and Services)
-    # Remove restrictive nodeSelector to allow deployment on all temporal nodes
-    # Rely on tolerations to target the correct nodes
+    nodeSelector:
+      workload: temporal-services
     tolerations:
       - key: workload
         operator: Equal
         value: temporal-services
-        effect: NoExecute
-      - key: workload
-        operator: Equal
-        value: temporal-cassandra
-        effect: NoExecute
-      - key: workload
-        operator: Equal
-        value: temporal-opensearch
         effect: NoExecute
     resources:
       requests:
