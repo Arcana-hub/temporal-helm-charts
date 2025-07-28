@@ -423,7 +423,7 @@ mysql:
 postgresql:
   enabled: false  # Disable PostgreSQL
 
-# Disable Monitoring (can be enabled if needed)
+# Prometheus Monitoring Configuration
 prometheus:
   enabled: true
   nodeSelector:
@@ -433,7 +433,31 @@ prometheus:
       operator: Equal
       value: temporal-services
       effect: NoExecute
+  
+  # Prometheus Server Configuration
   server:
+    # Data retention configuration
+    retention: "30d"  # Keep metrics for 30 days
+    retentionSize: "45GB"  # Maximum storage size before cleanup
+    
+    # Persistent storage configuration
+    persistentVolume:
+      enabled: true
+      size: 50Gi  # Disk size for Prometheus data
+      storageClass: "standard-rwo"  # Adjust based on your cluster's storage classes
+      accessModes:
+        - ReadWriteOnce
+    
+    # Resource limits and requests
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+      limits:
+        memory: "4Gi"
+        cpu: "2000m"
+    
+    # Node placement
     nodeSelector:
       workload: temporal-services
     tolerations:
@@ -441,7 +465,19 @@ prometheus:
         operator: Equal
         value: temporal-services
         effect: NoExecute
+    
+    # Additional server configuration
+    configMapOverrides:
+      global:
+        scrape_interval: 15s
+        evaluation_interval: 15s
+        external_labels:
+          cluster: 'temporal-stage'
+          environment: 'stage'
+  
+  # Prometheus Pushgateway Configuration
   prometheus-pushgateway:
+    enabled: true
     nodeSelector:
       workload: temporal-services
     tolerations:
@@ -449,6 +485,15 @@ prometheus:
         operator: Equal
         value: temporal-services
         effect: NoExecute
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+  
+  # Prometheus Node Exporter Configuration
   prometheus-node-exporter:
     enabled: true
     nodeSelector:
@@ -458,6 +503,13 @@ prometheus:
         operator: Equal
         value: temporal-services
         effect: NoExecute
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "50m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
 
 grafana:
   enabled: false
