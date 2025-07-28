@@ -437,8 +437,8 @@ prometheus:
   # Prometheus Server Configuration
   server:
     # Data retention configuration
-    retention: "30d"  # Keep metrics for 30 days
-    retentionSize: "45GB"  # Maximum storage size before cleanup
+    retention: "15d"  # Keep metrics for 30 days
+    retentionSize: "20GB"  # Maximum storage size before cleanup
     
     # Persistent storage configuration
     persistentVolume:
@@ -451,7 +451,7 @@ prometheus:
     # Resource limits and requests
     resources:
       requests:
-        memory: "1Gi"
+        memory: "2Gi"
         cpu: "500m"
       limits:
         memory: "4Gi"
