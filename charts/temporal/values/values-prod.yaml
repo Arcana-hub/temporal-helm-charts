@@ -466,16 +466,37 @@ prometheus:
         effect: NoExecute
     
     # Additional server configuration
-    configMapOverrides:
+    global:
+      scrape_interval: 60s  # Reduced frequency from 30s to 60s
+      evaluation_interval: 60s  # Reduced frequency from 30s to 60s
+      external_labels:
+        cluster: 'temporal-prod'
+        environment: 'prod'
+
+  # Prometheus server files configuration
+  serverFiles:
+    prometheus.yml:
       global:
         scrape_interval: 60s  # Reduced frequency from 30s to 60s
         evaluation_interval: 60s  # Reduced frequency from 30s to 60s
         external_labels:
-          cluster: 'temporal-stage'
-          environment: 'stage'
+          cluster: 'temporal-prod'
+          environment: 'prod'
+
+      rule_files:
+        - /etc/config/recording_rules.yml
+        - /etc/config/alerting_rules.yml
+        - /etc/config/rules
+        - /etc/config/alerts
       
       # Configure scraping to target only temporal namespace services
       scrape_configs:
+        # Default prometheus self-monitoring
+        - job_name: prometheus
+          static_configs:
+            - targets:
+              - localhost:9090
+        
         # Scrape temporal services in temporal namespace
         - job_name: 'temporal-services'
           kubernetes_sd_configs:
