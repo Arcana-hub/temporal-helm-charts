@@ -452,9 +452,9 @@ prometheus:
       requests:
         memory: "4Gi"
         cpu: "500m"
-      # limits:
-        # memory: "4Gi"
-        # cpu: "2000m"
+      limits:
+        memory: "6Gi"
+        cpu: "2000m"
     
     # Node placement
     nodeSelector:
@@ -468,11 +468,110 @@ prometheus:
     # Additional server configuration
     configMapOverrides:
       global:
-        scrape_interval: 30s
-        evaluation_interval: 30s
+        scrape_interval: 60s  # Reduced frequency from 30s to 60s
+        evaluation_interval: 60s  # Reduced frequency from 30s to 60s
         external_labels:
           cluster: 'temporal-stage'
           environment: 'stage'
+      
+      # Configure scraping to target only temporal namespace services
+      scrape_configs:
+        # Scrape temporal services in temporal namespace
+        - job_name: 'temporal-services'
+          kubernetes_sd_configs:
+            - role: endpoints
+              namespaces:
+                names:
+                  - temporal  # Only scrape temporal namespace
+          relabel_configs:
+            # Keep only services with prometheus scraping annotations
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            # Use custom path if specified
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            # Use custom port if specified
+            - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+              action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              target_label: __address__
+            # Add service name as label
+            - source_labels: [__meta_kubernetes_service_name]
+              action: replace
+              target_label: service
+            # Add namespace as label
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: namespace
+        
+        # Scrape temporal pods directly (for services without service monitors)
+        - job_name: 'temporal-pods'
+          kubernetes_sd_configs:
+            - role: pod
+              namespaces:
+                names:
+                  - temporal  # Only scrape temporal namespace
+          relabel_configs:
+            # Keep only pods with prometheus scraping annotations
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            # Use custom path if specified
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            # Use custom port if specified
+            - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+              action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              target_label: __address__
+            # Add pod name as label
+            - source_labels: [__meta_kubernetes_pod_name]
+              action: replace
+              target_label: pod
+            # Add namespace as label
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: namespace
+        
+        # Scrape OpenSearch metrics (no prometheus annotations, so explicit config needed)
+        - job_name: 'opensearch-metrics'
+          kubernetes_sd_configs:
+            - role: endpoints
+              namespaces:
+                names:
+                  - temporal
+          relabel_configs:
+            # Only scrape OpenSearch services
+            - source_labels: [__meta_kubernetes_service_name]
+              action: keep
+              regex: 'temporal-opensearch.*'
+            # Use port 9600 for metrics
+            - source_labels: [__address__]
+              action: replace
+              regex: '([^:]+)(?::\d+)?'
+              replacement: '$1:9600'
+              target_label: __address__
+            # Set metrics path
+            - target_label: __metrics_path__
+              replacement: /_prometheus/metrics
+            # Add service name as label
+            - source_labels: [__meta_kubernetes_service_name]
+              action: replace
+              target_label: service
+            # Add namespace as label
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: namespace
+            # Add job label
+            - target_label: job
+              replacement: opensearch
   
   # Prometheus Pushgateway Configuration
   prometheus-pushgateway:
