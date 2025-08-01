@@ -17,7 +17,7 @@ globalMetrics:
   annotations:
     enabled: true
   serviceMonitor:
-    enabled: true
+    enabled: false
     interval: 15s
     additionalLabels: {}
     metricRelabelings: []
@@ -224,6 +224,10 @@ server:
     service:
       port: 7235
       membershipPort: 6935
+    # Metrics inherited from globalMetrics
+    metrics:
+      annotations:
+        enabled: true
     deploymentLabels: {}
     deploymentAnnotations: {}
     podAnnotations: {}
